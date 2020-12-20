@@ -196,6 +196,7 @@ body, html {
 
 .App .playlist {
   height: calc(100vh - 240px);
+  width: 100%;
   overflow: auto;
 }
 

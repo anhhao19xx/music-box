@@ -5,7 +5,8 @@ import PlayIcon from './play.svg';
 import PauseIcon from './pause.svg';
 import SyncIcon  from './sync.svg';
 import DiskIcon from './disk.jpg';
-import RabbitLyrics from 'rabbit-lyrics'
+import RabbitLyrics from 'rabbit-lyrics';
+import Parse from 'parse';
 
 class App extends Component {
   constructor(props){
@@ -61,34 +62,17 @@ class App extends Component {
           });
       });
     };
+
+    // init parse
+    Parse.initialize("zfl6LEImkcfigB4k03nglOykQKQhYrDGQ5RKq0kR", "YKm75a35cnMDJnPe4T7iMyMrdee2TgKt74DwAbvf");
+    Parse.serverURL = "https://parseapi.back4app.com/";
   }
 
   async componentDidMount(){
     // fetch song list
-    const res = await fetch('https://chiasenhac.vn/nhac-hot/vietnam.html');
-    const raw = await res.text();
+    const songs = await Parse.Cloud.run("songs");
 
-    const r_song = /<div class="tool d-table-cell text-right">(.|\r|\n)*?<a.*?href="(.*?)"((.|\r|\n)*?)addPlaylistTable\('(.*?)', '(.*?)', '(.*?)', '(.*?)'\)/gm;
-
-    let id = 0;
-
-    const songs = [];
-    do {
-      let rel = r_song.exec(raw);
-      if (!rel)
-        break;
-
-      songs.push({
-        id: id++,
-        url: rel[2],
-        name: rel[5],
-        singer: rel[7]
-      }); 
-    } while(true);
-
-    this.setState({
-      songs
-    });
+    this.setState({ songs });
 
     // play song 
     this.updateAudioEvent();
@@ -173,24 +157,18 @@ class App extends Component {
       return;
 
     // fetch song
-    const res = await fetch(song.url);
-    const raw = await res.text();
+    const data = await Parse.Cloud.run("getsong", {
+      url: song.url
+    });
 
-    const r_source = /"file": "(.*?)"/gm;
-    const source = r_source.exec(raw)[1];
-
-    const r_subtitle = /class="rabbit-lyrics">((.|\r|\n)*?)<\/div>/gm;
-
-    const subtitle = (r_subtitle.exec(raw) || [])[1] || '';
-
-    this.setState({ 
+    this.setState(Object.assign({ 
       id: songid,
-      source,
       canPlay: false,
       duration: 0,
       current: 0,
-      subtitle
-    });
+      source: '',
+      subtitle: ''
+    }, data));
   }
 
   togglePlay(){
