@@ -17,10 +17,13 @@ class App extends Component {
       songs: [],
       source: null,
       isPlaying: false,
+      canPlay: false,
+      subtitle: '',
+      // timeline
       duration: 0,
       current: 0,
-      canPlay: false,
-      subtitle: ''
+      position: -1,
+      positionLabel: ''
     };
 
     this.togglePlay = this.togglePlay.bind(this);
@@ -29,6 +32,7 @@ class App extends Component {
     // audio ref tag
     this.audio = null;
     this.subtitle = null;
+    this.timeline = null;
 
     this.setAudio = node => {
       this.audio = node;
@@ -37,6 +41,10 @@ class App extends Component {
     this.setSubtitle = node => {
       this.subtitle = node;
     };
+
+    this.setTimeline = node => {
+      this.timeline = node;
+    }
 
     // ref event
     this.updateAudioEvent = () => {
@@ -52,7 +60,8 @@ class App extends Component {
       }, false);
 
       this.audio.addEventListener('ended', () => {
-        this.play((this.id + 1) % this.state.songs.length);
+        console.log('Song ended');
+        this.play((this.state.id + 1) % this.state.songs.length);
       });
 
       this.audio.addEventListener('timeupdate', () => {
@@ -60,6 +69,31 @@ class App extends Component {
           this.setState({
             current: this.audio.currentTime
           });
+      });
+
+      this.timeline.addEventListener('mousemove', e => {
+        const percent = e.layerX/this.timeline.offsetWidth;
+        let positionLabel = '';
+
+        if (!this.audio || !this.state.duration){
+          return;
+        }
+
+        positionLabel = percent * this.state.duration;
+
+        this.setState({ position: e.layerX, positionLabel });
+      });
+
+      this.timeline.addEventListener('mouseout', e => {
+        this.setState({ position: -1 });
+      });
+
+      this.timeline.addEventListener('click', e => {
+        const percent = e.layerX/this.timeline.offsetWidth;
+
+        if (this.audio && this.state.duration){
+          this.audio.currentTime = percent * this.state.duration;
+        }
       });
     };
 
@@ -119,8 +153,11 @@ class App extends Component {
             
           </div>
           <div className="timeline-wrapper">
-            <div className="timeline">
+            <div className="timeline" ref={ this.setTimeline }>
               <div className="current" style={{ width: this.state.current/this.state.duration*100 + '%'}}></div>
+              { this.state.position !== -1 ? (
+                <div className="tooltip" style={{ left: this.state.position }}>{ this.formatTime(this.state.positionLabel) }</div>
+              ) : ''}
             </div>
           </div>
           <div className="info">
@@ -150,6 +187,7 @@ class App extends Component {
   }
 
   async play(songid){
+    console.log(`Play song ${songid}`);
     // find song
     const song = this.state.songs.filter(s => s.id === songid)[0];
 
@@ -187,6 +225,12 @@ class App extends Component {
         isPlaying: !state.isPlaying
       }
     });
+  }
+
+  formatTime(seconds){
+    const min = Math.floor(seconds/60);
+    seconds = Math.floor(seconds % 60);
+    return `${min}:${seconds}`
   }
 }
 

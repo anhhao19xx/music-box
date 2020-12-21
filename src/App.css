@@ -137,6 +137,36 @@ body, html {
 .App .player .timeline-wrapper {
   height: 10px;
   padding: 2.5px 3px;
+  position: relative;
+  width: 100%;
+}
+
+.App .player .timeline-wrapper .tooltip {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  font-size: smaller;
+  background-color: white;
+  color: black;
+  height: 24px;
+  line-height: 24px;
+  width: 40px;
+  text-align: center;
+  border-radius: .2em;
+  transform: translate(-20px, 0);
+  pointer-events: none;
+}
+
+.App .player .timeline-wrapper .tooltip:after {
+  background-color: white;
+  content: ' ';
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: rotate(45deg);
+  margin-left: -4px;
 }
 
 .App .player .info {
@@ -186,11 +216,13 @@ body, html {
   height: 5px;
   border-radius: 3px;
   background-color: #212121;
-  overflow: hidden;
+  /* overflow: hidden; */
+  position: relative;
 }
 
 .App .player .timeline .current {
   height: 5px;
+  border-radius: 3px;
   background-color: #e53935; 
 }
 
