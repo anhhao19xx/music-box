@@ -2,6 +2,10 @@
 
 _Powered by React JS_
 
+## Demo
+
+Quick starting by demo at:  [https://www.anhhao.me/music-box/index.html](https://www.anhhao.me/music-box/index.html)
+
 ## Usage
 
 ```bash
