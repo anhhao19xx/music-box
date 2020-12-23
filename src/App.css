@@ -204,6 +204,10 @@ body, html {
   border: none;
   background-color: white; 
   cursor: pointer;
+} 
+
+.App .player .play:disabled {
+  animation: rotateDisk 1s infinite linear;
 }
 
 .App .player .play img {
@@ -240,6 +244,7 @@ body, html {
   background-color: transparent;
   width: 100%;
   text-align: left;
+  font-family: 'Oswald', sans-serif;
 
   height: 40px;
   line-height: 40px;

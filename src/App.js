@@ -161,8 +161,8 @@ class App extends Component {
             </div>
           </div>
           <div className="info">
-            <div className="song">{ (this.state.songs.filter(s => s.id === this.state.id)[0] || {}).name }</div>
-            <div className="singer">{ (this.state.songs.filter(s => s.id === this.state.id)[0] || {}).singer }</div>
+            <div className="song">{ this.state.canPlay ? (this.state.songs.filter(s => s.id === this.state.id)[0] || {}).name : 'Loading...' }</div>
+            <div className="singer">{ this.state.canPlay ? (this.state.songs.filter(s => s.id === this.state.id)[0] || {}).singer : '' }</div>
           </div>
           <div className="control">
             <button className="play" onClick={() => this.togglePlay()} disabled={ !this.state.canPlay }>
