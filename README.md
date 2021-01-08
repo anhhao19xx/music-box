@@ -12,6 +12,12 @@ Quick starting by demo at:  [https://www.anhhao.me/music-box/index.html](https:/
 npm run start
 ```
 
+**Clean & start Containers**
+
+```bash
+sudo docker rm -f $(sudo docker ps -a -q) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose up
+```
+
 ## Backend
 
 Using Back4App with Parse Server backend installed on it.

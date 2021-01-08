@@ -7,6 +7,7 @@ import SyncIcon  from './sync.svg';
 import DiskIcon from './disk.jpg';
 import RabbitLyrics from 'rabbit-lyrics';
 import Parse from 'parse';
+import axios from 'axios';
 
 class App extends Component {
   constructor(props){
@@ -98,13 +99,14 @@ class App extends Component {
     };
 
     // init parse
-    Parse.initialize("zfl6LEImkcfigB4k03nglOykQKQhYrDGQ5RKq0kR", "YKm75a35cnMDJnPe4T7iMyMrdee2TgKt74DwAbvf");
-    Parse.serverURL = "https://parseapi.back4app.com/";
+    // Parse.initialize('myappID', 'mymasterKey')
+    // Parse.serverURL = "http://localhost:1337/parse/";
   }
 
   async componentDidMount(){
     // fetch song list
-    const songs = await Parse.Cloud.run("songs");
+    // const songs = await Parse.Cloud.run("songs");
+    const { data: songs } = await axios.get('http://localhost:3000/songs')
 
     this.setState({ songs });
 
@@ -195,9 +197,11 @@ class App extends Component {
       return;
 
     // fetch song
-    const data = await Parse.Cloud.run("getsong", {
-      url: song.url
-    });
+    // const data = await Parse.Cloud.run("getsong", {
+    //   url: song.url
+    // });
+
+    const { data } = await axios.get(`http://localhost:3000/getsong/${encodeURIComponent(song.url)}`);
 
     this.setState(Object.assign({ 
       id: songid,

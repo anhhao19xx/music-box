@@ -1,0 +1,14 @@
+{
+  "name": "server",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^20.2.0",
+    "axios": "^0.21.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
